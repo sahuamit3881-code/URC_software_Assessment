@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/60fb78d8-791b-4af6-8686-a850889dcaf0
+
 # team_deimos_recruitment_task:)
 objective: so our objctive here was to make a 50kg rover drive from its spawn point which is the origin of the map frame, to a differnet point in the map
 what did i do?:
