@@ -1,1 +1,28 @@
-i will write it here a little latter
+ps:so like when we have two for ex a pc and a motor that wants to talk over a wire, it is not nessary for the data to arrive in perfect condition, electircal noise can flip the bits 
+so our objective was to create a function that continuous takes the data btye by btye and pick the valid data and ignore the noise
+################################################################################################
+so the data is send to use byte by byte in a packet , the structure of this packet is header byte , motor id , speed high byte , speed low byte and checksum. the code send in bits but we as a programmer see it in hexdecimal.
+our code begins by defining a enumeration which make the word parserstate a kind of data type with the words like wait_start,got_id etc as a kind of label that represents different stages of reading a packet
+
+we then created a funtion named handleincomingbyte with a parameter of type unsigned 8 bit data type
+inside the function their is a static variable state which holds the state of the data processing and it is assigned the wait_start value of the parserstate data type when the function is first called as it is a static variable it can hold the data even after the function is destroyed,
+we assign few more variable like motorid ,hibyte , low byte ( all static) and are assigned 0 initially
+then we check is the byte we getting is the started byte and the state is not wait_start , then we assign the state to be got_id and return it , this is done 
+as data can be corrupted and we get bytes like 0*AA 0*45 0*23 0*AA .......   this means that the previous data was corrupted as it didnt follow the the packet structure so we start new with the new started byte arrival
+now imagine we get the started byte and the state is wait_start then we move to the switch case which takes cases on the value of the state variable, so our first case checks if the 
+state== wait_start then activate the code inside the case which is  if the arrivsl byte is the stating byte and following the structure of the packet we make the state to got_id
+and then it breaks , this type of thing goes on for got_high, got_low(we even assign the values to our previously defined static varible
+if the data goes in the correct structe and the stated byte doesnt appeear suddenly then we get to the expect_check state which does the XOR of the motori byte , highbyte byte and the lowbyte byte and checks
+is the arrival btye is equal to the xor of all these , if true the packet is valid and not corrupted
+if false , the packet is corrupted
+then inside this case , at the end it changes the state to wait_start for the arrival of the new packet
+in case the state varible gets an unexpected value which is impossible  , the default makes the state backto the wait_start
+
+in the rest of the program we are just checking the if it works by giving our self made values
+
+also i wanna explain why their is a high byte and low byte bytes , so like one byte only can provide only 0 to 225 values , so what we do we take two different bytes and place them next to each 
+other to make a new 16 bit value , ex high byte be 0001 00011 (0*13) low byte 1110 1000 (0*E8) so our final value is 00010001111101000  this is the value
+provided by the byte
+
+
+
